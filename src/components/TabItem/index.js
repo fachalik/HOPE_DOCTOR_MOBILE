@@ -12,17 +12,12 @@ import {
   IconHome,
   IconProfile,
   IconProfileActive,
-  IconSOS,
-  IconSOSActive,
 } from '../../assets';
 
 const TabItem = ({isFocused, onPress, onLongPress, label}) => {
   const Icon = () => {
     if (label === 'Beranda') {
       return isFocused ? <IconHomeActive /> : <IconHome />;
-    }
-    if (label === 'SOS') {
-      return isFocused ? <IconSOSActive /> : <IconSOS />;
     }
     if (label === 'Profil') {
       return isFocused ? <IconProfileActive /> : <IconProfile />;
