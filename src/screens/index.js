@@ -18,6 +18,8 @@ import LayananKesehatan from './MainStack/HomeStack/LayananKesehatan';
 // ProfileStack
 import Profil from './MainStack/ProfileStack/Profile';
 
+//other
+import SearchMedicine from './MainStack/HomeStack/Search/SearchMedicine';
 export {
   LoginRegistOnBoard,
   Login,
@@ -33,4 +35,5 @@ export {
   InfoObat,
   LayananKesehatan,
   Profil,
+  SearchMedicine,
 };

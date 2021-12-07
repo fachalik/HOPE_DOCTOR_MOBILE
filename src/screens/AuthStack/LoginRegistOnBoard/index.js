@@ -41,13 +41,6 @@ const LoginRegistOnBoard = ({navigation}) => {
               <Text style={styles.buttonTextRegister}>MASUK</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonfooter}
-            onPress={() => navigation.navigate('TestRedux')}>
-            <View style={styles.textLogin}>
-              <Text style={styles.buttonTextRegister}>TestRedux</Text>
-            </View>
-          </TouchableOpacity>
         </View>
       </View>
     </View>

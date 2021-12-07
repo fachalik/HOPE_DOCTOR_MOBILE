@@ -1,5 +1,9 @@
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export const truncate = (str, len) => {
+  return str.length > len ? str.substring(0, len - 3) + '...' : str;
+};
+
 // ** Checks if an object is empty (returns boolean)
 export const isObjEmpty = obj => Object.keys(obj).length === 0;
 
@@ -33,7 +37,9 @@ export const formatDate = (
   value,
   formatting = {month: 'short', day: 'numeric', year: 'numeric'},
 ) => {
-  if (!value) return value;
+  if (!value) {
+    return value;
+  }
   return new Intl.DateTimeFormat('en-US', formatting).format(new Date(value));
 };
 
@@ -66,8 +72,12 @@ export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
  * @param {String} userRole Role of user
  */
 export const getHomeRouteForLoggedInUser = userRole => {
-  if (userRole === 'admin') return '/';
-  if (userRole === 'client') return '/access-control';
+  if (userRole === 'admin') {
+    return '/';
+  }
+  if (userRole === 'client') {
+    return '/access-control';
+  }
   return '/login';
 };
 
@@ -90,7 +100,9 @@ export const selectThemeColors = theme => ({
  * @returns string
  */
 export const queryBuilder = query => {
-  if (!query) return '';
+  if (!query) {
+    return '';
+  }
   const queryString = new URLSearchParams(query).toString();
   return `?${queryString}`;
 };
