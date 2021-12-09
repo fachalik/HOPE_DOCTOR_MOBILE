@@ -34,7 +34,7 @@ const SearchLayananKesehatan = ({navigation}) => {
         const RefreshToken = await AsyncStorage.getItem('RefreshToken');
 
         await axios
-          .post(config.API_URL + 'auth/login/refresh', {
+          .post(config.API_URL_NEW + 'auth/login/refresh', {
             refresh: RefreshToken,
           })
           .then(function (response) {
@@ -45,7 +45,7 @@ const SearchLayananKesehatan = ({navigation}) => {
             console.log(error);
           });
         await axios
-          .get(config.API_URL + 'hospital/', {
+          .get(config.API_URL_NEW + 'hospital/', {
             headers: {Authorization: 'Bearer ' + userToken},
           })
           .then(function (response) {
@@ -57,7 +57,7 @@ const SearchLayananKesehatan = ({navigation}) => {
             console.log(error);
           });
         await axios
-          .get(config.API_URL + 'laboratory/', {
+          .get(config.API_URL_NEW + 'laboratory/', {
             headers: {Authorization: 'Bearer ' + userToken},
           })
           .then(function (response) {

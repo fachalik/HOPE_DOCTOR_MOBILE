@@ -78,6 +78,12 @@ const Kategori = ({route, navigation}) => {
   };
   return (
     <MainLayout>
+      <View style={styles.Header}>
+        <Text style={styles.headerText}>Info obat</Text>
+        <View>
+          <Icon name="questioncircleo" size={22} color={colors.gray} />
+        </View>
+      </View>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('SearchMedicine');
@@ -104,8 +110,19 @@ const Kategori = ({route, navigation}) => {
 export default Kategori;
 
 const styles = StyleSheet.create({
+  Header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerText: {
+    fontFamily: 'Poppins-Bold',
+    fontSize: 29,
+    textAlign: 'center',
+  },
   container: {
     flex: 1,
+    height: '100%',
     backgroundColor: colors.white,
   },
   wrapper: {

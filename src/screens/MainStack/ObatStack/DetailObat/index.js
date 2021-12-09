@@ -59,7 +59,7 @@ const DetailObat = ({route, navigation}) => {
     const RefreshToken = await AsyncStorage.getItem('RefreshToken');
 
     await axios
-      .post(config.API_URL + 'auth/login/refresh', {
+      .post(config.API_URL_NEW + 'auth/login/refresh', {
         refresh: RefreshToken,
       })
       .then(function (response) {
@@ -70,7 +70,7 @@ const DetailObat = ({route, navigation}) => {
         console.log(error);
       });
     await axios
-      .get(config.API_URL + 'medicine/?kind=' + route.params.request, {
+      .get(config.API_URL_NEW + 'medicine/?kind=' + route.params.request, {
         headers: {Authorization: 'Bearer ' + userToken},
       })
       .then(function (response) {

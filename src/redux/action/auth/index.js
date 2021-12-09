@@ -1,16 +1,20 @@
 import {services} from '../../../utils/Services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const getUser = ({service, type = 'GET_USER', payload}) => {
+export const getUser = ({service, type = 'GET_USER', token, payload}) => {
   return dispatch => {
     return new Promise((resolve, reject) => {
-      services[service](payload).then(data => {
-        dispatch({
-          type,
-          data: data.data,
-        });
-        console.log('data usaer', data);
-      });
+      services[service](token, payload)
+        .then(data => {
+          dispatch({
+            type,
+            data,
+          });
+          AsyncStorage.setItem('userData', JSON.stringify(data));
+          // console.log(data);
+          resolve(data);
+        })
+        .catch(error => reject(error));
     });
   };
 };

@@ -12,12 +12,22 @@ import {
   IconHome,
   IconProfile,
   IconProfileActive,
+  IconChat,
+  IconChatActive,
+  IconObat,
+  IconObatActive,
 } from '../../assets';
 
 const TabItem = ({isFocused, onPress, onLongPress, label}) => {
   const Icon = () => {
-    if (label === 'Beranda') {
+    if (label === 'Dashboard') {
       return isFocused ? <IconHomeActive /> : <IconHome />;
+    }
+    if (label === 'Konsultasi') {
+      return isFocused ? <IconChatActive /> : <IconChat />;
+    }
+    if (label === 'Obat') {
+      return isFocused ? <IconObatActive /> : <IconObat />;
     }
     if (label === 'Profil') {
       return isFocused ? <IconProfileActive /> : <IconProfile />;
@@ -46,7 +56,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.backgroundColor,
   },
   IconFile: {
-    width: width / 3,
+    width: width / 4,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',

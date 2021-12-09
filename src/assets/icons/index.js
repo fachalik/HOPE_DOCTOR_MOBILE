@@ -6,6 +6,8 @@ import IconChat from './Chat.svg';
 import IconChatActive from './ChatActive.svg';
 import IconSOS from './SOS.svg';
 import IconSOSActive from './SOSActive.svg';
+import IconObat from './Obat.svg';
+import IconObatActive from './ObatActive.svg';
 import IconAvatar from './Avatar.svg';
 import LogoTemp from './HopeTempLogo.svg';
 import Maintenance from './Maintenance.svg';
@@ -22,6 +24,8 @@ export {
   IconHomeActive,
   IconSOS,
   IconSOSActive,
+  IconObat,
+  IconObatActive,
   IconAvatar,
   LogoTemp,
   Maintenance,

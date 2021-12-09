@@ -1,28 +1,36 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import styles from './style.js';
-import {
-  Stack,
-  HStack,
-  Button,
-  IconButton,
-  Icon,
-  Text,
-  NativeBaseProvider,
-  Center,
-  Box,
-  StatusBar,
-  Avatar,
-} from 'native-base';
+import {Stack, Text, Box, Avatar} from 'native-base';
 import MainLayout from '../../../../containers/MainLayout';
 import {IconAvatar} from '../../../../assets';
 import colors from '../../../../assets/colors';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
+import {getUser} from '../../../../redux/action/auth';
+import {useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 const Home = () => {
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const authStore = useSelector(state => state.auth.userToken.result.access);
+  const handleGetUser = async (service, token, payload) => {
+    console.log(payload);
+    await dispatch(getUser({service, token, payload}))
+      .then(value => {
+        console.log(value);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    handleGetUser('login', authStore);
+  }, []);
+
   return (
     <View style={styles.container}>
       <MainLayout boolean={isLoading}>

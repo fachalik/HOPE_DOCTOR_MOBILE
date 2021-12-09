@@ -8,15 +8,18 @@ import TestRedux from './AuthStack/TestRedux';
 
 //HomeStack
 import Home from './MainStack/HomeStack/Home';
-import ChatBotScreen from './MainStack/HomeStack/ChatBotScreen';
-import ChatDoctorScreen from './MainStack/HomeStack/ChatDoctorScreen';
-import ChatPsikologScreen from './MainStack/HomeStack/ChatPsikologScreen';
-import DetailObat from './MainStack/HomeStack/DetailObat';
-import InfoObat from './MainStack/HomeStack/InfoObat';
-import LayananKesehatan from './MainStack/HomeStack/LayananKesehatan';
 
 // ProfileStack
 import Profil from './MainStack/ProfileStack/Profile';
+
+//ConsultationStack
+import ListKonsultasi from './MainStack/ConsultationStack/ListKonsultasi';
+import ChatPasien from './MainStack/ConsultationStack/ChatPasien';
+import MainConsultation from './MainStack/ConsultationStack/MainConsultation';
+
+//ObatStack
+import DetailObat from './MainStack/ObatStack/DetailObat';
+import InfoObat from './MainStack/ObatStack/InfoObat';
 
 //other
 import SearchMedicine from './MainStack/HomeStack/Search/SearchMedicine';
@@ -28,12 +31,11 @@ export {
   ForgetPassword,
   TestRedux,
   Home,
-  ChatBotScreen,
-  ChatDoctorScreen,
-  ChatPsikologScreen,
+  ListKonsultasi,
+  MainConsultation,
+  ChatPasien,
   DetailObat,
   InfoObat,
-  LayananKesehatan,
   Profil,
   SearchMedicine,
 };

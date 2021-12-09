@@ -4,6 +4,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Dimensions,
+  View,
 } from 'react-native';
 import colors from '../../assets/colors';
 import LoadingV2 from '../../components/Universal/LoadingV2';
@@ -14,10 +15,10 @@ import {
 
 const MainLayout = ({children, boolean}) => {
   return (
-    <KeyboardAvoidingView behavior="height" style={styles.container}>
-      <ScrollView style={styles.wrapper}>{children}</ScrollView>
+    <ScrollView behavior="height" style={styles.container}>
+      <View style={styles.wrapper}>{children}</View>
       {boolean ? <LoadingV2 /> : null}
-    </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
@@ -26,11 +27,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: '100%',
-    // flex: 1,
     backgroundColor: colors.backgroundColor,
   },
   wrapper: {
+    paddingVertical: hp('3%'),
     paddingHorizontal: wp('5%'),
-    marginTop: hp('3%'),
   },
 });

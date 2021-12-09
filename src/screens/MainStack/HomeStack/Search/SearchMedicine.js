@@ -34,7 +34,7 @@ const SearchMedicine = ({navigation}) => {
         const RefreshToken = await AsyncStorage.getItem('RefreshToken');
 
         await axios
-          .post(config.API_URL + 'auth/login/refresh/', {
+          .post(config.API_URL_NEW + 'auth/login/refresh/', {
             refresh: RefreshToken,
           })
           .then(function (response) {
@@ -45,7 +45,7 @@ const SearchMedicine = ({navigation}) => {
             console.log(error);
           });
         await axios
-          .get(config.API_URL + 'medicine/', {
+          .get(config.API_URL_NEW + 'medicine/', {
             headers: {Authorization: 'Bearer ' + userToken},
           })
           .then(function (response) {

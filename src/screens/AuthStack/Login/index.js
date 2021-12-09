@@ -11,7 +11,6 @@ import {colors} from '../../../styles/base';
 import styles from './style.js';
 import {useDispatch} from 'react-redux';
 import {handleLogin} from '../../../redux/action/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const loginValidationSchema = yup.object().shape({
   email: yup
@@ -53,10 +52,8 @@ const Login = ({navigation}) => {
       });
   };
 
-  const onSubmit = data => {
-    handleRequest('login', data);
-    AsyncStorage.setItem('test', 'test');
-    // console.log(data);
+  const onSubmit = async data => {
+    await handleRequest('getUser');
   };
 
   return (
@@ -89,6 +86,7 @@ const Login = ({navigation}) => {
                       base: '100%',
                       md: '25%',
                     }}
+                    autoCapitalize="none"
                     style={styles.InputText}
                     name="email"
                     onChangeText={handleChange('email')}
@@ -114,6 +112,7 @@ const Login = ({navigation}) => {
                       base: '100%',
                       md: '25%',
                     }}
+                    autoCapitalize="none"
                     style={styles.InputText}
                     name="password"
                     onChangeText={handleChange('password')}
