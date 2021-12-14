@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect, useCallback} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Bubble, GiftedChat, InputToolbar, Send} from 'react-native-gifted-chat';
+import React, { useState, useEffect, useCallback } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Bubble, GiftedChat, InputToolbar, Send } from 'react-native-gifted-chat';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../../../../assets/colors';
-const ChatPasien = ({route, navigation}) => {
+const ChatPasien = ({ route, navigation }) => {
   console.log(route.params);
   const [messages, setMessages] = useState([]);
-  const {data} = route.params;
+  const { data } = route.params;
   const [user, setUser] = useState({});
   useEffect(() => {
     setMessages([
@@ -27,7 +27,7 @@ const ChatPasien = ({route, navigation}) => {
   }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor: colors.white}}>
+    <View style={{ flex: 1, backgroundColor: colors.white }}>
       <GiftedChat
         messages={messages}
         onSend={messages => onSend(messages)}
@@ -38,7 +38,7 @@ const ChatPasien = ({route, navigation}) => {
         alwaysShowSend
         // renderSend={renderSend}
         // renderInputToolbar={renderInputToolbar}
-        textInputStyle={{color: colors.black}}
+        textInputStyle={{ color: colors.black }}
         placeholderTextColor={colors.gray}
       />
     </View>
