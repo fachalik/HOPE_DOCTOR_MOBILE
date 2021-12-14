@@ -8,6 +8,14 @@ In the project directory, you can run:
 
 To start Metro, run npx react-native start inside your React Native project folder:
 
+### `npm install / npm i`
+
+### `npm audit fix`
+
+### `npx react-native link`
+
+To start Metro, run npx react-native start inside your React Native project folder:
+
 ### `npx react-native start`
 
 plug your device to your computer and type :
