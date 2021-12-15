@@ -53,7 +53,7 @@ const Login = ({navigation}) => {
   };
 
   const onSubmit = async data => {
-    await handleRequest('getUser');
+    await handleRequest('login', data);
   };
 
   return (
