@@ -59,7 +59,7 @@ const api = {
   delete: url => useAPI({method: 'delete', url: `${url}`}),
   patch: (url, data) => useAPI({method: 'patch', url: `${url}`, data}),
   post: (url, data) => useAPI({method: 'post', url: `${url}`, data}),
-  getWithToken: (token, url) =>
+  getWithToken: (url, token) =>
     getUseAPIWithToken({method: 'get', url: `${url}`, token}),
   deleteWithToken: url => useAPIWithToken({method: 'delete', url: `${url}`}),
   patchWithToken: (url, data) =>

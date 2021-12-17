@@ -28,7 +28,8 @@ export const handleLogin = ({service, type = 'LOGIN', payload}) => {
             type,
             data,
           });
-          AsyncStorage.setItem('userToken', JSON.stringify(data));
+          AsyncStorage.setItem('userToken', JSON.stringify(data.result.access));
+          AsyncStorage.setItem('refreshToken', JSON.stringify(data.result.refresh));
           resolve(data);
         })
         .catch(error => reject(error));

@@ -28,7 +28,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    handleGetUser('login', authStore);
+    handleGetUser('getUser', authStore);
   }, []);
 
   return (
