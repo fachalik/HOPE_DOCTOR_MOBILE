@@ -20,7 +20,6 @@ const useAPI = ({method, url, data}) => {
 };
 
 const getUseAPIWithToken = ({method, url, token}) => {
-  console.log(token);
   return new Promise((resolve, reject) => {
     axios({
       headers: {
@@ -64,7 +63,7 @@ const api = {
   deleteWithToken: url => useAPIWithToken({method: 'delete', url: `${url}`}),
   patchWithToken: (url, data) =>
     useAPIWithToken({method: 'patch', url: `${url}`, data}),
-  postWithToken: (url, data) =>
+  postWithToken: (url, data, token) =>
     useAPIWithToken({method: 'post', url: `${url}`, data}),
 };
 
@@ -81,5 +80,7 @@ export const services = {
   login: data => api.post(`${config.API_URL_NEW}auth/login/`, data),
   getUser: (token, datax) =>
     api.getWithToken(`${config.API_URL_NEW}user/me/`, token),
+  refreshToken: data =>
+    api.post(`${config.API_URL_NEW}auth/login/refresh`, data),
   fetchUsers: () => api.get('https://jsonplaceholder.typicode.com/users'),
 };

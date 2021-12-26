@@ -16,6 +16,11 @@ const authReducer = (state = initialState, action) => {
         ...state,
         userToken: action.data,
       };
+    case 'REFRESH_TOKEN':
+      return {
+        ...state,
+        userToken: action.data,
+      };
     case 'LOGOUT':
       const obj = {...action};
       delete obj.type;
