@@ -7,7 +7,7 @@ import {IconAvatar} from '../../../../assets';
 import colors from '../../../../assets/colors';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
-import {getUser, handleRefreshToken} from '../../../../redux/action/auth';
+import {getUser} from '../../../../redux/action/auth';
 import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
 import {useReducer} from 'react';
@@ -31,19 +31,6 @@ const Home = () => {
       });
   };
 
-  const handleGetRefreshToken = async (service, payload) => {
-    await dispatch(handleRefreshToken({service, payload}))
-      .then(value => {
-        console.log(value);
-        SetUser(
-          `${value.result.profile.first_name} ${value.result.profile.last_name}`,
-        );
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
   useEffect(() => {
     const fetchUserData = async () => {
       await setIsLoading(true);
@@ -53,13 +40,6 @@ const Home = () => {
 
     fetchUserData();
   }, []);
-
-  const onRefreshToken = () => {
-    const refreshToken = {
-      refresh: authStore.userToken.result.refresh,
-    };
-    handleGetRefreshToken('refreshToken', refreshToken);
-  };
 
   return (
     <View style={styles.container}>
@@ -102,7 +82,7 @@ const Home = () => {
             {/* Chat Pasien */}
             <TouchableOpacity
               onPress={() => {
-                onRefreshToken();
+                navigation.navigate('SearchMedicine');
               }}>
               <Box borderRadius="md" style={styles.cardItem}>
                 <Stack direction="row" style={{alignItems: 'center'}} space={3}>

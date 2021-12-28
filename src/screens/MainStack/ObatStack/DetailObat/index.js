@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, createRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, {useState, useEffect, createRef} from 'react';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../../../../config';
@@ -10,6 +10,10 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import LoadingV2 from '../../../../components/Universal/LoadingV2';
 import Icon from 'react-native-vector-icons/AntDesign';
+import {useSelector} from 'react-redux';
+import {handleRefreshToken} from '../../../../redux/action/auth';
+import {useDispatch} from 'react-redux';
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -18,7 +22,9 @@ import FastImage from 'react-native-fast-image';
 import MainLayout from '../../../../containers/MainLayout';
 import ActionSheet from 'react-native-actions-sheet';
 
-const DetailObat = ({ route, navigation }) => {
+const DetailObat = ({route, navigation}) => {
+  const dispatch = useDispatch();
+  const authStore = useSelector(state => state.auth);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setIsData] = useState([]);
   const [detail, setDetail] = useState({
@@ -53,26 +59,29 @@ const DetailObat = ({ route, navigation }) => {
     DetailItem.current?.setModalVisible();
   };
 
-  useEffect(async () => {
-    setIsLoading(true);
-    var userToken = await AsyncStorage.getItem('userToken');
-    const refreshToken = await AsyncStorage.getItem('refreshToken');
-
-    await axios
-      .post(config.API_URL_NEW + 'auth/login/refresh', {
-        refresh: refreshToken,
+  const getRefreshToken = async (service, payload) => {
+    var token = '';
+    await dispatch(handleRefreshToken({service, payload}))
+      .then(value => {
+        console.log(value);
+        token = value.result.access;
       })
-      .then(function (response) {
-        console.log("masuk")
-        AsyncStorage.setItem('userToken', response.data.result.access);
-        userToken = response.data.result.access;
-      })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error);
       });
+    return token;
+  };
+
+  useEffect(async () => {
+    setIsLoading(true);
+    const refreshToken = {
+      refresh: authStore.userToken.result.refresh,
+    };
+    const token = await getRefreshToken('refreshToken', refreshToken);
+    console.log(token);
     await axios
       .get(config.API_URL_NEW + 'medicine/?kind=' + route.params.request, {
-        headers: { Authorization: 'Bearer ' + userToken },
+        headers: {Authorization: 'Bearer ' + token},
       })
       .then(function (response) {
         setIsData(response.data.result);
@@ -81,7 +90,7 @@ const DetailObat = ({ route, navigation }) => {
         console.log(error);
       });
     await setIsLoading(false);
-  }, [null]);
+  }, []);
 
   const Obat = () => {
     return data.map(item => {
@@ -127,7 +136,7 @@ const DetailObat = ({ route, navigation }) => {
                 elevation: 10,
               }}>
               <FastImage
-                source={{ uri: item.image }}
+                source={{uri: item.image}}
                 style={{
                   width: wp('25%'),
                   height: wp('25%'),
@@ -147,7 +156,7 @@ const DetailObat = ({ route, navigation }) => {
                 }}>
                 {item.name}
               </Text>
-              <Text style={{ fontFamily: 'Karla-Bold', fontSize: 10 }}>
+              <Text style={{fontFamily: 'Karla-Bold', fontSize: 10}}>
                 {item.price_range}
               </Text>
             </View>
@@ -183,7 +192,7 @@ const DetailObat = ({ route, navigation }) => {
   return (
     <>
       <ActionSheet gestureEnabled={true} ref={DetailItem}>
-        <View style={{ marginHorizontal: wp('5%') }}>
+        <View style={{marginHorizontal: wp('5%')}}>
           <Text style={styles.bigTitle}>{detail.name}</Text>
           <Text style={styles.title}>Harga</Text>
           <Text style={styles.contents}>{detail.harga}</Text>
@@ -211,7 +220,7 @@ const DetailObat = ({ route, navigation }) => {
             navigation.navigate('SearchMedicine');
           }}>
           <View style={styles.searchBar}>
-            <View style={{ marginRight: 10 }}>
+            <View style={{marginRight: 10}}>
               <Icon name="search1" size={20} color={colors.gray} />
             </View>
             <View>
@@ -219,7 +228,7 @@ const DetailObat = ({ route, navigation }) => {
             </View>
           </View>
         </TouchableOpacity>
-        <Text style={{ fontFamily: 'Karla-Bold' }}>Pilihan produk kesehatan</Text>
+        <Text style={{fontFamily: 'Karla-Bold'}}>Pilihan produk kesehatan</Text>
         <View style={styles.itemObat}>{!isLoading ? <Obat /> : null}</View>
       </MainLayout>
     </>

@@ -1,39 +1,81 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import MainLayout from '../../../../containers/MainLayout';
 import styles from './style.js';
 import {useNavigation} from '@react-navigation/native';
 import {colors} from '../../../../styles/base';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {data} from './data';
 import FastImage from 'react-native-fast-image';
+import {useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
+import {services} from '../../../../utils/Services';
+import {handleRefreshToken} from '../../../../redux/action/auth';
 
 const ListKonsultasi = () => {
+  const dispatch = useDispatch();
+  const authStore = useSelector(state => state.auth);
+  const [convData, setConvData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  // console.log(authStore.userData.result.ID);
   const navigation = useNavigation();
 
+  const getRefreshToken = async (service, payload) => {
+    var token = '';
+    await dispatch(handleRefreshToken({service, payload}))
+      .then(value => {
+        console.log(value);
+        token = value.result.access;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    return token;
+  };
+
+  useEffect(() => {
+    const fetchAllConv = async () => {
+      const refreshToken = {
+        refresh: authStore.userToken.result.refresh,
+      };
+      const token = await getRefreshToken('refreshToken', refreshToken);
+      const ID = await authStore.userData.result.ID;
+      services
+        .fetchAllConversation(token, ID)
+        .then(dataConv => {
+          // console.log(data);
+          setConvData(dataConv.result);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    };
+
+    fetchAllConv();
+  }, []);
+
+  // console.log(convData);
   const renderListPasien = () => {
-    return data.map(item => {
+    return convData.map((item, idx) => {
       return (
         <TouchableOpacity
-          key={item.id}
+          key={idx}
           onPress={() =>
             navigation.navigate('ChatPasien', {
               data: {
                 createdAt: new Date(),
-                message: item.message,
+                message: item.chats,
                 user: {
                   _id: 2,
-                  name: item.nama,
-                  avatar: item.image,
+                  name: item.ID,
+                  // avatar: item.image,
                 },
               },
             })
           }>
           <View style={styles.Kontak}>
-            <FastImage
+            {/* <FastImage
               source={{uri: item.image}}
               style={{
                 width: 40,
@@ -42,10 +84,10 @@ const ListKonsultasi = () => {
                 resizeMode: 'cover',
               }}
               resizeMode={FastImage.resizeMode.contain}
-            />
+            /> */}
             <View style={styles.itemKontak}>
-              <Text style={styles.itemName}>{item.nama}</Text>
-              <Text style={styles.itemMessage}>{item.message[0]}</Text>
+              <Text style={styles.itemName}>{item.ID}</Text>
+              <Text style={styles.itemMessage}>{item.chats[0].message}</Text>
             </View>
           </View>
         </TouchableOpacity>

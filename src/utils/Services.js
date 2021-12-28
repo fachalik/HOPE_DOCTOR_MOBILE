@@ -83,4 +83,11 @@ export const services = {
   refreshToken: data =>
     api.post(`${config.API_URL_NEW}auth/login/refresh`, data),
   fetchUsers: () => api.get('https://jsonplaceholder.typicode.com/users'),
+  fetchAllConversation: (token, params) =>
+    api.getWithToken(
+      `${config.API_URL_NEW}conversation?userID=${params}`,
+      token,
+    ),
+  fetchAllConversationByID: (token, params) =>
+    api.getWithToken(`${config.API_URL_NEW}conversation/${params}`, token),
 };

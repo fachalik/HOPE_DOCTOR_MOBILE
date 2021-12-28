@@ -1,9 +1,8 @@
+import config from '../../config';
+
 class Socket {
   constructor() {
-    // ganti pake env
-    this.socket = new WebSocket(
-      'ws://13.251.114.0:8000/api/v1/conversation/ws',
-    );
+    this.socket = new WebSocket(`${config.API_URL_NEW}conversation/ws`);
 
     this.socket.onopen = function (e) {
       console.log('[open] Connection established');
