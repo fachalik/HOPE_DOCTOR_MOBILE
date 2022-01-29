@@ -6,6 +6,11 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'SET_USER':
+      return {
+        ...state,
+        userData: action.data,
+      };
     case 'GET_USER':
       return {
         ...state,

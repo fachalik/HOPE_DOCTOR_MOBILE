@@ -19,6 +19,24 @@ export const getUser = ({service, type = 'GET_USER', token, payload}) => {
   };
 };
 
+export const setUser = ({service, type = 'SET_USER', token, payload}) => {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      services[service](token, payload)
+        .then(data => {
+          dispatch({
+            type,
+            data,
+          });
+          AsyncStorage.setItem('userData', JSON.stringify(data));
+          // console.log(data);
+          resolve(data);
+        })
+        .catch(error => reject(error));
+    });
+  };
+};
+
 export const handleLogin = ({service, type = 'LOGIN', payload}) => {
   return dispatch => {
     return new Promise((resolve, reject) => {

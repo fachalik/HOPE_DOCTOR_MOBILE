@@ -65,17 +65,12 @@ const api = {
     useAPIWithToken({method: 'patch', url: `${url}`, data}),
   postWithToken: (url, data, token) =>
     useAPIWithToken({method: 'post', url: `${url}`, data}),
+  putWithToken: (url, data, token) =>
+    useAPIWithToken({method: 'put', url: `${url}`, token, data}),
 };
 
 // const ssoUrl = process.env.REACT_APP_API_URL;
 export const services = {
-  // Service examples
-  // getAllData: () => api.get('endpoint'),
-  // // getAllDataWithQuery: ({ qs }) => api.get(`endpoint${qs}`),
-  // getDataByParam: param => api.get(`endpoint/${param}`),
-  // patchData: (param, data) => api.patch(`endpoint/${param}`, data),
-  // postData: data => api.post('endpoint', data),
-  // deleteData: param => api.delete(`endpoint/${param}`),
   // // Add real API implement
   login: data => api.post(`${config.API_URL_NEW}auth/login/`, data),
   getUser: (token, datax) =>
@@ -90,4 +85,6 @@ export const services = {
     ),
   fetchAllConversationByID: (token, params) =>
     api.getWithToken(`${config.API_URL_NEW}conversation/${params}`, token),
+  UpdateProfile: (token, data) =>
+    api.putWithToken(`${config.API_URL_NEW}user/me`, token, data),
 };

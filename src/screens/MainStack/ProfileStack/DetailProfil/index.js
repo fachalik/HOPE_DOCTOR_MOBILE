@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native';
 import {useSelector} from 'react-redux';
 import MainLayout from '../../../../containers/MainLayout';
 import {
@@ -11,10 +11,15 @@ import {
   Box,
   Button,
 } from 'native-base';
-import {Formik, Form} from 'formik';
+import {setUser} from '../../../../redux/action/auth';
+import {Formik} from 'formik';
+import {useDispatch} from 'react-redux';
 
 const DetailProfil = () => {
+  const dispatch = useDispatch();
+  const authStore = useSelector(state => state.auth);
   const userData = useSelector(state => state.auth.userData.result);
+
   const [data, setData] = useState({
     first_name: userData.first_name,
     last_name: userData.last_name,
@@ -27,6 +32,52 @@ const DetailProfil = () => {
       specialization: userData.profile.specialization,
     },
   });
+
+  const showToast = () => {
+    console.log('toast click...');
+    ToastAndroid.show(
+      'Edit profil berhasil',
+      ToastAndroid.SHORT,
+      ToastAndroid.CENTER,
+    );
+  };
+
+  const requestEdit = async (service, payload, token) => {
+    await dispatch(setUser({service, payload, token}))
+      .then(value => {
+        console.log(value);
+        setData({
+          ...data,
+          first_name: value.result.first_name,
+          last_name: value.result.last_name,
+          psychologist_profile: {
+            location: value.result.profile.location,
+            lisence: value.result.profile.lisence,
+            membership_number: String(value.result.profile.membership_number),
+            experience: value.result.profile.experience,
+            topic_category: value.result.profile.topic_category,
+            specialization: value.result.profile.specialization,
+          },
+        });
+        showToast();
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const onSubmit = async data => {
+    const profile = data;
+    profile.psychologist_profile.membership_number = Number(
+      data.psychologist_profile.membership_number,
+    );
+    await requestEdit(
+      'UpdateProfile',
+      authStore.userToken.result.access,
+      profile,
+    );
+  };
+
   return (
     <MainLayout>
       {!!userData && (
@@ -46,9 +97,7 @@ const DetailProfil = () => {
           <Formik
             enableReinitialize={true}
             initialValues={data}
-            onSubmit={(values, actions) => {
-              console.log(values);
-            }}>
+            onSubmit={values => onSubmit(values)}>
             {({
               handleChange,
               handleBlur,
@@ -80,7 +129,7 @@ const DetailProfil = () => {
                     name="psychologist_profile.membership_number"
                     placeholder="Mohon masukkan nomor member anda"
                     placeholderTextColor="grey"
-                    keyboardType="default"
+                    keyboardType="numeric"
                   />
                 </FormControl>
                 <FormControl w={'100%'} mt={1}>
@@ -221,7 +270,7 @@ const DetailProfil = () => {
                   />
                 </FormControl>
                 <Box alignItems="center" mt={2} w="full">
-                  <Button w={'full'} onPress={() => alert('hello world')}>
+                  <Button w={'full'} onPress={() => handleSubmit()}>
                     SIMPAN
                   </Button>
                 </Box>
