@@ -11,6 +11,7 @@ import Home from './MainStack/HomeStack/Home';
 
 // ProfileStack
 import Profil from './MainStack/ProfileStack/Profile';
+import DetailProfil from './MainStack/ProfileStack/DetailProfil';
 
 //ConsultationStack
 import ListKonsultasi from './MainStack/ConsultationStack/ListKonsultasi';
@@ -23,6 +24,7 @@ import InfoObat from './MainStack/ObatStack/InfoObat';
 
 //other
 import SearchMedicine from './MainStack/HomeStack/Search/SearchMedicine';
+
 export {
   LoginRegistOnBoard,
   Login,
@@ -37,5 +39,6 @@ export {
   DetailObat,
   InfoObat,
   Profil,
+  DetailProfil,
   SearchMedicine,
 };

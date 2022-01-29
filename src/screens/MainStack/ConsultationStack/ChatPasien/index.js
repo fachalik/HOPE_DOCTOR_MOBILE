@@ -2,39 +2,43 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useCallback} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Bubble, GiftedChat, InputToolbar, Send} from 'react-native-gifted-chat';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {View} from 'react-native';
+import {GiftedChat} from 'react-native-gifted-chat';
 import colors from '../../../../assets/colors';
 import {services} from '../../../../utils/Services';
 import ws from '../../../../utils/Socket';
 import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
 import {handleRefreshToken} from '../../../../redux/action/auth';
-import {v4 as uuidv4} from 'uuid';
+import uuid from 'react-native-uuid';
 
-const ChatPasien = ({route, navigation}) => {
-  // console.log(route.params);
+const ChatPasien = ({route}) => {
   const dispatch = useDispatch();
   const authStore = useSelector(state => state.auth);
   const [ourId, setOurId] = useState(authStore.userData.result.ID);
   const [messages, setMessages] = useState([]);
   const {data} = route.params;
-
-  // ws.socket.onmessage = function (event) {
-  //   const chat = JSON.parse(event.data);
-  //   // cek dulu conversation id yg diterima sesuai dengan conversation ini nggak?
-  //   // if (chat.conversation_id === conv_id) { //conv_id dpt dr yg udah dioper pas milih chat
-  //     // intinya sih update messagenya wkwk ngga ngerti pake useState lik help yes yg benernya <3
-  //     setMessages([...messages, {
-  //       _id: chat.ID,
-  //       text: chat.message,
-  //       createdAt: chat.CreatedAt, // berguna buat mana yg duluan
-  //       user: { _id: chat.user_id }, //user_id berguna untuk kanan kirinya chat, tergantung ini dilihat dr hp siapa
-  //     }])
-  //     console.log(`[message] Data received from server: ${event.data}`);
-  //   // }
-  // };
+  console.log(data);
+  useEffect(() => {
+    ws.socket.onmessage = function (event) {
+      const chat = JSON.parse(event.data);
+      if (data.conv_id === chat.result.conversation_id) {
+        setMessages([
+          {
+            _id: chat.result.ID,
+            text: chat.result.message,
+            createdAt: chat.result.CreatedAt, // berguna buat mana yg duluan
+            user: {
+              _id: chat.result.user_id,
+              name: data.user.name,
+            }, //user_id berguna untuk kanan kirinya chat, tergantung ini dilihat dr hp siapa
+          },
+          ...messages,
+        ]);
+      }
+      console.log(`[message] Data received from server: ${event.data}`);
+    };
+  });
 
   const getRefreshToken = async (service, payload) => {
     var token = '';
@@ -54,46 +58,41 @@ const ChatPasien = ({route, navigation}) => {
         refresh: authStore.userToken.result.refresh,
       };
       const token = await getRefreshToken('refreshToken', refreshToken);
-      const ID = await authStore.userData.result.ID;
+      const arrMessage = [];
       services
-        .fetchAllConversationByID(token, ID)
+        .fetchAllConversationByID(token, data.conv_id)
         .then(dataConv => {
-          const firstUser = dataConv.result.first_user_id;
-          const secondUser = dataConv.result.second_user_id;
+          const firstUser = dataConv.result.first_user.ID;
+          const secondUser = dataConv.result.second_user.ID;
           dataConv.result.chats
             .slice(0)
             .reverse()
             .map(conv => {
               const objMessage = {};
-              if (
-                ourId === dataConv.result.first_name_user ||
-                ourId === conv.user_id
-              ) {
-                console.log(firstUser);
+              if (ourId === conv.user_id) {
                 Object.assign(objMessage, {
-                  _id: uuidv4(),
-                  text: conv.message,
-                  createdAt: conv.CreatedAt,
-                  user: {
-                    _id: secondUser,
-                    name: 'halo',
-                  },
-                });
-              } else {
-                console.log(secondUser);
-                Object.assign(objMessage, {
-                  _id: uuidv4(),
+                  _id: uuid.v4(),
                   text: conv.message,
                   createdAt: conv.CreatedAt,
                   user: {
                     _id: firstUser,
-                    name: 'hola',
+                    name: `${dataConv.result.first_user.first_name} ${dataConv.result.first_user.last_name}`,
+                  },
+                });
+              } else {
+                Object.assign(objMessage, {
+                  _id: uuid.v4(),
+                  text: conv.message,
+                  createdAt: conv.CreatedAt,
+                  user: {
+                    _id: secondUser,
+                    name: `${dataConv.result.second_user.first_name} ${dataConv.result.second_user.last_name}`,
                   },
                 });
               }
-              console.log(objMessage);
-              setMessages(messages => [...messages, objMessage]);
+              arrMessage.push(objMessage);
             });
+          setMessages(arrMessage);
         })
         .catch(error => {
           console.log(error);
@@ -103,19 +102,19 @@ const ChatPasien = ({route, navigation}) => {
   }, []);
 
   const onSend = useCallback((messages = []) => {
-    setMessages(previousMessages =>
-      GiftedChat.append(previousMessages, messages),
-    );
+    // setMessages(previousMessages =>
+    //   GiftedChat.append(previousMessages, messages),
+    // );
+
     const chat = {
-      conversation_id: 1, //isi pake id conversationnya ntar
-      user_id: 10, // isi pake user yg login
+      conversation_id: data.conv_id, //isi pake id conversationnya ntar
+      user_id: ourId, // isi pake user yg login
       type: 'TEXT', // ini biarin dulu keknya blm ada kirim gambar(?)
-      message: messages[0]['text'], //gini kah untuk ngambil message paling baru?._. harusnya iya...
+      message: messages[0].text, //gini kah untuk nga  mbil message paling baru?._. harusnya iya...
     };
+
     ws.socket.send(JSON.stringify(chat));
   }, []);
-
-  // console.log(messages.chats);
 
   return (
     <View style={{flex: 1, backgroundColor: colors.white}}>
@@ -137,5 +136,3 @@ const ChatPasien = ({route, navigation}) => {
 };
 
 export default ChatPasien;
-
-const styles = StyleSheet.create({});

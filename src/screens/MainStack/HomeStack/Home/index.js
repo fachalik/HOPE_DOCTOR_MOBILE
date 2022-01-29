@@ -22,9 +22,7 @@ const Home = () => {
     await dispatch(getUser({service, token, payload}))
       .then(value => {
         console.log(value);
-        SetUser(
-          `${value.result.profile.first_name} ${value.result.profile.last_name}`,
-        );
+        SetUser(`${value.result.first_name} ${value.result.last_name}`);
       })
       .catch(error => {
         console.log(error);

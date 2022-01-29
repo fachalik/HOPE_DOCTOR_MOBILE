@@ -23,7 +23,7 @@ const LoginRegistOnBoard = ({navigation}) => {
           backgroundColor="white"
           barStyle="dark-content"
         />
-        <Carousel data={dummyData} />
+        {/* <Carousel data={dummyData} /> */}
       </View>
       <View style={styles.footer}>
         <View style={styles.ViewButton}>

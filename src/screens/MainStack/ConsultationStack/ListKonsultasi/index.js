@@ -7,11 +7,10 @@ import styles from './style.js';
 import {useNavigation} from '@react-navigation/native';
 import {colors} from '../../../../styles/base';
 import Icon from 'react-native-vector-icons/AntDesign';
-import FastImage from 'react-native-fast-image';
-import {useDispatch} from 'react-redux';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {services} from '../../../../utils/Services';
 import {handleRefreshToken} from '../../../../redux/action/auth';
+import {Avatar} from 'native-base';
 
 const ListKonsultasi = () => {
   const dispatch = useDispatch();
@@ -44,7 +43,7 @@ const ListKonsultasi = () => {
       services
         .fetchAllConversation(token, ID)
         .then(dataConv => {
-          // console.log(data);
+          console.log(dataConv);
           setConvData(dataConv.result);
         })
         .catch(error => {
@@ -58,6 +57,7 @@ const ListKonsultasi = () => {
   // console.log(convData);
   const renderListPasien = () => {
     return convData.map((item, idx) => {
+      console.log('conversation_id', item.conversation_id);
       return (
         <TouchableOpacity
           key={idx}
@@ -66,9 +66,10 @@ const ListKonsultasi = () => {
               data: {
                 createdAt: new Date(),
                 message: item.chats,
+                conv_id: item.conversation_id,
                 user: {
-                  _id: 2,
-                  name: item.ID,
+                  _id: item.first_user.ID,
+                  name: `${item.second_user.first_name} ${item.second_user.last_name}`,
                   // avatar: item.image,
                 },
               },
@@ -85,10 +86,61 @@ const ListKonsultasi = () => {
               }}
               resizeMode={FastImage.resizeMode.contain}
             /> */}
-            <View style={styles.itemKontak}>
-              <Text style={styles.itemName}>{item.ID}</Text>
-              <Text style={styles.itemMessage}>{item.chats[0].message}</Text>
-            </View>
+            {authStore.userData.result.ID === item.first_user.id ? (
+              <>
+                <Avatar
+                  bg="indigo.500"
+                  alignSelf="center"
+                  size="md">{`${item.first_user.first_name.charAt(
+                  0,
+                )}${item.first_user.last_name.charAt(0)} `}</Avatar>
+                <View style={styles.itemKontak}>
+                  <View style={{display: 'flex', alignItems: 'center'}}>
+                    <Text style={styles.itemName}>
+                      {item.first_user.first_name}
+                    </Text>
+                    <Text style={styles.itemName}>
+                      {item.first_user.last_name}
+                    </Text>
+                  </View>
+                  {item.chats.length !== 0 ? (
+                    <Text style={styles.itemMessage}>
+                      {item.chats[0].message}
+                    </Text>
+                  ) : null}
+                </View>
+              </>
+            ) : (
+              <>
+                <Avatar
+                  bg="indigo.500"
+                  alignSelf="center"
+                  size="md">{`${item.second_user.first_name.charAt(
+                  0,
+                )}${item.second_user.last_name.charAt(0)} `}</Avatar>
+                <View style={styles.itemKontak}>
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={styles.itemName}>
+                      {item.second_user.first_name}
+                    </Text>
+                    <Text style={styles.itemName}>
+                      {item.second_user.last_name}
+                    </Text>
+                  </View>
+                  {item.chats.length !== 0 ? (
+                    <Text style={styles.itemMessage}>
+                      {item.chats[0].message}
+                    </Text>
+                  ) : null}
+                </View>
+              </>
+            )}
           </View>
         </TouchableOpacity>
       );

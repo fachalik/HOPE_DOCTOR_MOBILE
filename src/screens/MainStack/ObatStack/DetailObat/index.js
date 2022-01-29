@@ -6,8 +6,6 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../../../../config';
 import colors from '../../../../assets/colors';
-import BottomSheet from 'reanimated-bottom-sheet';
-import Animated from 'react-native-reanimated';
 import LoadingV2 from '../../../../components/Universal/LoadingV2';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useSelector} from 'react-redux';

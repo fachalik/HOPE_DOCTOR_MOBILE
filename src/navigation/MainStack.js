@@ -10,6 +10,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   Home,
   Profil,
+  DetailProfil,
   InfoObat,
   DetailObat,
   SearchMedicine,
@@ -71,6 +72,11 @@ const AccountStackScreen = () => {
         name="Profil"
         component={Profil}
         options={{headerShown: false}}
+      />
+      <AccountStack.Screen
+        name="Detail Profil"
+        component={DetailProfil}
+        options={{headerShown: true, headerTitleAlign: 'center'}}
       />
     </AccountStack.Navigator>
   );
@@ -226,7 +232,7 @@ const MainStack = props => {
         options={({route}) => ({
           tabBarVisible: (route => {
             const routeName = getFocusedRouteNameFromRoute(route) ?? '';
-            if (routeName === 'Edit Profile') {
+            if (routeName === 'Detail Profil') {
               return false;
             }
 
