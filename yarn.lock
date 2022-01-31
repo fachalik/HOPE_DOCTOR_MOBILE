@@ -1803,6 +1803,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-plugin/-/eslint-plugin-1.1.0.tgz#e42b1bef12d2415411519fd528e64b593b1363dc"
   integrity sha512-W/J0fNYVO01tioHjvYWQ9m6RgndVtbElzYozBq1ZPrHO/iCzlqoySHl4gO/fpCl9QEFjvJfjPgtPMTMlsoq5DQ==
 
+"@react-native-community/slider@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-4.2.0.tgz#47fa146b2f2c92e45c35c154b1df8a66e71b8048"
+  integrity sha512-7LUDk63cbkDgmTqHBWn0pXzwF/VY9I3wDTnLWNehgQu7GlluHDn02qHgINxS9dRoG96JOqLFxRxnCEKkg5zcmQ==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@react-native/assets/-/assets-1.0.0.tgz#c6f9bf63d274bafc8e970628de24986b30a55c8e"
@@ -2674,6 +2679,11 @@ agent-base@6:
   integrity sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==
   dependencies:
     debug "4"
+
+agora-rn-uikit@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/agora-rn-uikit/-/agora-rn-uikit-3.3.0.tgz#a7820ec49a36a7e88da4cf59e016ad03b4d7afd8"
+  integrity sha512-KuhTBOwRpHDYYDwSLliGnQqrCTSkAIlTLqRn0/KveLgjiTaGpi6zGUAa7yjOasorHYa/oFUt+euvk2MAoom/+Q==
 
 ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.4:
   version "6.12.6"
@@ -7179,6 +7189,11 @@ react-native-actions-sheet@^0.5.7:
   version "0.5.8"
   resolved "https://registry.yarnpkg.com/react-native-actions-sheet/-/react-native-actions-sheet-0.5.8.tgz#9367a7a2cbadd7b0cff82eb5e72c27578c13222d"
   integrity sha512-bucvVl2lU0k0ogq6dDmJTKDa28SOGM8sMdr14qflnbqcSYEJH0YT+DWoJXzsocdNvXMBsdqM5J8bX+k6weIKFg==
+
+react-native-agora@^3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/react-native-agora/-/react-native-agora-3.5.2.tgz#36c0f4bb610b894181e81e4982c50a22963532b0"
+  integrity sha512-cgZ9FjQq2cpn92HU1NLXdxQU3xCyaP+tlF6joCxmFNr3XW6/qe5MjgHyGeTifrmq97d/TEQO2YzM/bIfvSAHYA==
 
 react-native-codegen@^0.0.7:
   version "0.0.7"

@@ -22,6 +22,10 @@ import MainConsultation from './MainStack/ConsultationStack/MainConsultation';
 import DetailObat from './MainStack/ObatStack/DetailObat';
 import InfoObat from './MainStack/ObatStack/InfoObat';
 
+//ServiceStack
+import CallPage from './ServiceStack/CallPage';
+import VideoCallPage from './ServiceStack/VideoCallPage';
+
 //other
 import SearchMedicine from './MainStack/HomeStack/Search/SearchMedicine';
 
@@ -41,4 +45,6 @@ export {
   Profil,
   DetailProfil,
   SearchMedicine,
+  CallPage,
+  VideoCallPage,
 };

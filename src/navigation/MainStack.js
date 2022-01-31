@@ -16,6 +16,8 @@ import {
   SearchMedicine,
   MainConsultation,
   ChatPasien,
+  VideoCallPage,
+  CallPage,
 } from '../screens';
 import BottomNavigator from '../components/BottomNavigatior';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
@@ -32,6 +34,16 @@ const HomeStackScreen = () => {
       <HomeStack.Screen
         name="Home"
         component={Home}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="VideoCall"
+        component={VideoCallPage}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="Call"
+        component={CallPage}
         options={{headerShown: false}}
       />
       <HomeStack.Screen
@@ -154,10 +166,6 @@ const ObatStackScreen = () => {
 
 const MainStack = props => {
   return (
-    // <Tab.Navigator initialRouteName="Beranda">
-    //   <Tab.Screen name="Beranda" component={HomeStackScreen} />
-    //   <Tab.Screen name="Profil" component={AccountStackScreen} />
-    // </Tab.Navigator>
     <Tab.Navigator
       initialRouteName="Dashboard"
       tabBar={props => <BottomNavigator {...props} />}>

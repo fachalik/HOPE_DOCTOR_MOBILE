@@ -131,6 +131,44 @@ const Home = () => {
                 </Stack>
               </Box>
             </TouchableOpacity>
+
+            {/* CallPage test*/}
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Call');
+              }}>
+              <Box borderRadius="md" style={styles.cardItem}>
+                <Stack direction="row" style={{alignItems: 'center'}} space={3}>
+                  <MaterialIcon
+                    name="message"
+                    size={32}
+                    color={colors.orange}
+                  />
+                  <Text fontSize="lg" style={styles.cardTitle}>
+                    Call
+                  </Text>
+                </Stack>
+              </Box>
+            </TouchableOpacity>
+
+            {/* VideoCall test  */}
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('VideoCall');
+              }}>
+              <Box borderRadius="md" style={styles.cardItem}>
+                <Stack direction="row" style={{alignItems: 'center'}} space={3}>
+                  <MaterialIcon
+                    name="message"
+                    size={32}
+                    color={colors.orange}
+                  />
+                  <Text fontSize="lg" style={styles.cardTitle}>
+                    VideoCall
+                  </Text>
+                </Stack>
+              </Box>
+            </TouchableOpacity>
           </View>
         </MainLayout>
       ) : null}
