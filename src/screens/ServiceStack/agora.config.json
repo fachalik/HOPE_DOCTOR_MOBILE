@@ -1,12 +1,8 @@
 {
   "//appId": "Get your own App ID at https://dashboard.agora.io/",
-  "appId": "b14097bd5eb1461b9aafc9ec59667234",
+  "appId": "1be63cae1f2f4e009c087887caa0dfef",
   "//token": "Please refer to https://docs.agora.io/en/Agora%20Platform/token",
-  "token": "123",
+  "token": "0061be63cae1f2f4e009c087887caa0dfefIABh+ftKV1tmIsgfLY64EwGB3wEs6GWzOlc+g4FPhyojpOsN9mEAAAAAEAD1z9KPKnv7YQEAAQAqe/th",
   "//channelId": "Your channel ID",
-  "channelId": "test",
-  "//uid": "Your int user ID",
-  "uid": 0,
-  "//stringUid": "Your string user ID",
-  "stringUid": "0"
+  "channelId": "hope-testing"
 }

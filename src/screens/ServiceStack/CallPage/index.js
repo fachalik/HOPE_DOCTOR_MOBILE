@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Button,
   PermissionsAndroid,
@@ -8,127 +8,139 @@ import {
   View,
 } from 'react-native';
 import RtcEngine, {
-  ChannelProfile,
-  ClientRole,
   RtcEngineContext,
 } from 'react-native-agora';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Item from './Item';
 
 const config = require('../agora.config.json');
 
-export default class JoinChannelAudio extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      channelId: config.channelId,
-      isJoined: false,
-      openMicrophone: true,
-      enableSpeakerphone: true,
-      playEffect: false,
+const JoinChannelAudio = () => {
+  const dispatch = useDispatch();
+  const userId = useSelector(state => state.auth.userData.result.ID);
+  const [channelId, setChannelId] = useState(config.channelId);
+  const [isJoined, setIsJoined] = useState(false);
+  const [openMicrophone, setOpenMicrophone] = useState(true);
+  const [enableSpeakerphone, setEnableSpeakerphone] = useState(true);
+  const [playEffect, setPlayEffect] = useState(false);
+  const [peerIds, setPeerIds] = useState([]);
+
+  const _engine = useRef(null)
+
+  useEffect(() => {
+    const _initEngine = async () => {
+      _engine.current = await RtcEngine.createWithContext(
+        new RtcEngineContext(config.appId),
+      );
+      await _engine.current.enableAudio();
+      _addListeners();
     };
-  }
 
-  UNSAFE_componentWillMount() {
-    this._initEngine();
-  }
+    _initEngine();
 
-  componentWillUnmount() {
-    this._engine?.destroy();
-  }
+    return () => {
+      if (_engine.current) {
+        _engine.current.destroy();
+        _engine.current = null;
+      }
+    }
+  }, []);
 
-  _initEngine = async () => {
-    this._engine = await RtcEngine.createWithContext(
-      new RtcEngineContext(config.appId),
-    );
-    this._addListeners();
-
-    await this._engine.enableAudio();
-    await this._engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
-    await this._engine.setClientRole(ClientRole.Broadcaster);
-  };
-
-  _addListeners = () => {
-    this._engine?.addListener('Warning', warningCode => {
+  const _addListeners = () => {
+    _engine.current?.addListener('Warning', warningCode => {
       console.info('Warning', warningCode);
     });
-    this._engine?.addListener('Error', errorCode => {
+    _engine.current?.addListener('Error', errorCode => {
       console.info('Error', errorCode);
     });
-    this._engine?.addListener('JoinChannelSuccess', (channel, uid, elapsed) => {
+    _engine.current?.addListener('JoinChannelSuccess', (channel, uid, elapsed) => {
       console.info('JoinChannelSuccess', channel, uid, elapsed);
-      this.setState({isJoined: true});
+      setIsJoined(true);
     });
-    this._engine?.addListener('LeaveChannel', stats => {
+    _engine.current?.addListener('LeaveChannel', stats => {
       console.info('LeaveChannel', stats);
-      this.setState({isJoined: false});
+      setIsJoined(false);
+    });
+    _engine.current?.addListener('UserJoined', (uid, elapsed) => {
+      console.info('UserJoined', uid, elapsed);
+      if (peerIds.indexOf(uid) === -1) {
+        setPeerIds([...peerIds, uid]);
+      };
+    });
+    _engine.current?.addListener('UserOffline', (uid, reason) => {
+      console.info('UserOffline', uid, reason);
+      peerIds.filter(id => id !== uid);
     });
   };
 
-  _joinChannel = async () => {
+  const _joinChannel = async () => {
     if (Platform.OS === 'android') {
-      await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-      );
+      PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
+      ).then(granted => {
+        if (granted) {
+          console.log("Permission granted")
+        } else {
+          console.log("Permission denied")
+        }
+      }).catch(err => {
+        console.warn(err)
+      })
     }
-    await this._engine?.joinChannel(
+
+    await _engine.current?.joinChannel(
       config.token,
-      this.state.channelId,
+      channelId,
       null,
-      config.uid,
+      userId,
     );
   };
-  _onChangeRecordingVolume = value => {
-    this._engine?.adjustRecordingSignalVolume(value * 400);
+  const _onChangeRecordingVolume = value => {
+    _engine.current?.adjustRecordingSignalVolume(value * 400);
   };
 
-  _onChangePlaybackVolume = value => {
-    this._engine?.adjustPlaybackSignalVolume(value * 400);
+  const _onChangePlaybackVolume = value => {
+    _engine.current?.adjustPlaybackSignalVolume(value * 400);
   };
 
-  _toggleInEarMonitoring = isEnabled => {
-    this._engine?.enableInEarMonitoring(isEnabled);
+  const _toggleInEarMonitoring = isEnabled => {
+    _engine.current?.enableInEarMonitoring(isEnabled);
   };
 
-  _onChangeInEarMonitoringVolume = value => {
-    this._engine?.setInEarMonitoringVolume(value * 400);
+  const _onChangeInEarMonitoringVolume = value => {
+    _engine.current?.setInEarMonitoringVolume(value * 400);
   };
 
-  _leaveChannel = async () => {
-    await this._engine?.leaveChannel();
+  const _leaveChannel = async () => {
+    await _engine.current?.leaveChannel();
   };
 
-  _switchMicrophone = () => {
-    const {openMicrophone} = this.state;
-    this._engine
-      ?.enableLocalAudio(!openMicrophone)
+  const _switchMicrophone = () => {
+    _engine.current?.enableLocalAudio(!openMicrophone)
       .then(() => {
-        this.setState({openMicrophone: !openMicrophone});
+        setOpenMicrophone(!openMicrophone);
       })
       .catch(err => {
         console.warn('enableLocalAudio', err);
       });
   };
 
-  _switchSpeakerphone = () => {
-    const {enableSpeakerphone} = this.state;
-    this._engine
-      ?.setEnableSpeakerphone(!enableSpeakerphone)
+  const _switchSpeakerphone = () => {
+    _engine.current?.setEnableSpeakerphone(!enableSpeakerphone)
       .then(() => {
-        this.setState({enableSpeakerphone: !enableSpeakerphone});
+        setEnableSpeakerphone(!enableSpeakerphone);
       })
       .catch(err => {
         console.warn('setEnableSpeakerphone', err);
       });
   };
 
-  _switchEffect = () => {
-    const {playEffect} = this.state;
+  const _switchEffect = () => {
     if (playEffect) {
-      this._engine
-        ?.stopEffect(1)
+      _engine.current?.stopEffect(1)
         .then(() => {
-          this.setState({playEffect: false});
+          setPlayEffect(false);
         })
         .catch(err => {
           console.warn('stopEffect', err);
@@ -136,64 +148,55 @@ export default class JoinChannelAudio extends Component {
     }
   };
 
-  render() {
-    const {
-      channelId,
-      isJoined,
-      openMicrophone,
-      enableSpeakerphone,
-      playEffect,
-    } = this.state;
-    return (
-      <View style={styles.container}>
-        <View style={styles.top}>
-          <TextInput
-            style={styles.input}
-            onChangeText={text => this.setState({channelId: text})}
-            placeholder={'Channel ID'}
-            value={channelId}
+  return (
+    <View style={styles.container}>
+      <View style={styles.top}>
+        <TextInput
+          style={styles.input}
+          onChangeText={text => setChannelId(text)}
+          placeholder={'Channel ID'}
+          value={channelId}
+        />
+        <Button
+          onPress={isJoined ? _leaveChannel : _joinChannel}
+          title={`${isJoined ? 'Leave' : 'Join'} channel`}
+        />
+      </View>
+      {isJoined && (
+        <View style={styles.float}>
+          <Item
+            title={`Microphone ${openMicrophone ? 'on' : 'off'}`}
+            btnOnPress={_switchMicrophone}
           />
-          <Button
-            onPress={isJoined ? this._leaveChannel : this._joinChannel}
-            title={`${isJoined ? 'Leave' : 'Join'} channel`}
+          <Item
+            title={enableSpeakerphone ? 'Speakerphone' : 'Earpiece'}
+            btnOnPress={_switchSpeakerphone}
+          />
+          <Item
+            title={`${playEffect ? 'Stop' : 'Play'} effect`}
+            btnOnPress={_switchEffect}
+          />
+          <Item
+            title={'RecordingVolume'}
+            isShowSlider
+            onSliderValueChange={_onChangeRecordingVolume}
+          />
+          <Item
+            title={'PlaybackVolume'}
+            isShowSlider={true}
+            onSliderValueChange={_onChangePlaybackVolume}
+          />
+          <Item
+            title={'InEar Monitoring Volume'}
+            isShowSlider
+            isShowSwitch
+            onSwitchValueChange={_toggleInEarMonitoring}
+            onSliderValueChange={_onChangeInEarMonitoringVolume}
           />
         </View>
-        {isJoined && (
-          <View style={styles.float}>
-            <Item
-              title={`Microphone ${openMicrophone ? 'on' : 'off'}`}
-              btnOnPress={this._switchMicrophone}
-            />
-            <Item
-              title={enableSpeakerphone ? 'Speakerphone' : 'Earpiece'}
-              btnOnPress={this._switchSpeakerphone}
-            />
-            <Item
-              title={`${playEffect ? 'Stop' : 'Play'} effect`}
-              btnOnPress={this._switchEffect}
-            />
-            <Item
-              title={'RecordingVolume'}
-              isShowSlider
-              onSliderValueChange={this._onChangeRecordingVolume}
-            />
-            <Item
-              title={'PlaybackVolume'}
-              isShowSlider={true}
-              onSliderValueChange={this._onChangePlaybackVolume}
-            />
-            <Item
-              title={'InEar Monitoring Volume'}
-              isShowSlider
-              isShowSwitch
-              onSwitchValueChange={this._toggleInEarMonitoring}
-              onSliderValueChange={this._onChangeInEarMonitoringVolume}
-            />
-          </View>
-        )}
-      </View>
-    );
-  }
+      )}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -214,3 +217,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
+
+export default JoinChannelAudio; 
